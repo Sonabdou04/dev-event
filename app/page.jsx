@@ -1,18 +1,10 @@
-import ExploreBtn from "@/components/ExploreBtn";
+import ExploreBtn from "../components/ExploreBtn";
 import React from "react";
-import EventCard from "@/components/EventCard";
+import EventCard from "../components/EventCard";
+import { EVENTS } from "./lib/constants";
+import TestEventButton from "./Test";
 
 export default function page() {
-  const events = [
-    {
-      title: "Event 1",
-      image: "/images/event1.png",
-    },
-    {
-      title: "Event 2",
-      image: "/images/event2.png",
-    },
-  ];
   return (
     <section>
       <h1 className="text-center">
@@ -25,13 +17,14 @@ export default function page() {
       <div className="mt-10 space-y-5">
         <h3>Featured Events</h3>
         <ul className="events">
-          {events.map((event) => (
+          {EVENTS.map((event) => (
             <li key={event.title} className="list-none">
-              <EventCard title={event.title} image={event.image} />
+              <EventCard {...event} />
             </li>
           ))}
         </ul>
       </div>
+      <TestEventButton />
     </section>
   );
 }
