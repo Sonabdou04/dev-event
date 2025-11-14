@@ -11,9 +11,6 @@ export function PosthogProvider() {
         capture_pageview: true,
         capture_pageleave: true,
       });
-
-      // Debugging: check if init actually worked
-      console.log("PostHog initialized:", posthog.isFeatureEnabled ? "✅" : "❌");
     }
   }, []);
 

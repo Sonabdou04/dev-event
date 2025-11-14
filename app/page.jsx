@@ -2,7 +2,6 @@ import ExploreBtn from "../components/ExploreBtn";
 import React from "react";
 import EventCard from "../components/EventCard";
 import { EVENTS } from "./lib/constants";
-import TestEventButton from "./Test";
 
 export default function page() {
   return (
@@ -24,7 +23,6 @@ export default function page() {
           ))}
         </ul>
       </div>
-      <TestEventButton />
     </section>
   );
 }
