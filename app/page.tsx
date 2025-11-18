@@ -1,9 +1,10 @@
 import ExploreBtn from "../components/ExploreBtn";
-import React from "react";
 import EventCard from "../components/EventCard";
-import { EVENTS } from "./lib/constants";
+import { IEvent } from "./lib/database";
 
-export default function page() {
+export default async function page() {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/events`);
+  const {events} = await response.json();
   return (
     <section>
       <h1 className="text-center">
@@ -16,11 +17,11 @@ export default function page() {
       <div className="mt-10 space-y-5">
         <h3>Featured Events</h3>
         <ul className="events">
-          {EVENTS.map((event) => (
+          {events && events.length > 0 ? events.map((event: IEvent) => (
             <li key={event.title} className="list-none">
               <EventCard {...event} />
             </li>
-          ))}
+          )) : <p>No events found</p>}
         </ul>
       </div>
     </section>
