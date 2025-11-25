@@ -4,6 +4,7 @@ import BookEvent from "../../../components/BookEvent";
 import { getSimilarEvents } from "../../lib/actions/event.actions";
 import { IEvent } from "../../lib/database";
 import EventCard from "../../../components/EventCard";
+import { cacheLife } from "next/cache";
 
 const EventDetail = ({
   icon,
@@ -48,6 +49,8 @@ const EventTags = ({ tags }: { tags: string[] }) => {
 };
 
 const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
+  "use cache";
+  cacheLife("hours")
   const { slug } = await params;
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/events/${slug}`
@@ -73,8 +76,6 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 
   const booking = 5;
   const similarEvents = await getSimilarEvents(slug);
-  console.log(similarEvents);
-
   return (
     <section id="event">
       <div className="header">
@@ -115,29 +116,11 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
               label={audience}
             />
           </section>
-          {agenda &&
-            (() => {
-              try {
-                return <EventAgenda agendaItems={agenda} />;
-              } catch (e) {
-                console.error("Invalid agenda JSON:", e);
-                return null;
-              }
-            })()}{" "}
-          <div className="flex-col-gap-2">
+          {agenda && agenda.length > 0 && <EventAgenda agendaItems={agenda} />}          <div className="flex-col-gap-2">
             <h2>The Event Organizer</h2>
             <p>{organizer}</p>
           </div>
-          {tags &&
-            (() => {
-              try {
-                return <EventTags tags={tags} />;
-              } catch (e) {
-                console.error("Invalid tags JSON:", e);
-                return null;
-              }
-            })()}
-        </div>
+          {tags && tags.length > 0 && <EventTags tags={tags} />}        </div>
         <aside className="booking">
           <div className="signup-card">
             <h2>Book this event</h2>
@@ -154,7 +137,7 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
         <h2>Similar Events</h2>
         <div className="events">
           {similarEvents.length > 0 ? similarEvents.map((event: IEvent) => (
-            <EventCard key={event._id} {...event} />
+            <EventCard key={event.title} {...event} />
           )) : (
             <p>No similar events found</p>
           )}
