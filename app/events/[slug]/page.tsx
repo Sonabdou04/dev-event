@@ -57,6 +57,7 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
   );
   const {
     event: {
+      _id,
       description,
       overview,
       image,
@@ -73,6 +74,7 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
     },
   } = await response.json();
   if (!description) return notFound();
+  console.log(_id)
 
   const booking = 5;
   const similarEvents = await getSimilarEvents(slug);
@@ -129,7 +131,7 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
             ) : (
               <p className="text-sm">Be the first to join this event!</p>
             )}
-            <BookEvent />
+            <BookEvent eventId={_id} slug={slug}/>
           </div>
         </aside>
       </div>
