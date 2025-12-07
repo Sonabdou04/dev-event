@@ -1,13 +1,15 @@
 import { Schema, model, models, Document, Types } from 'mongoose';
 import Event from './event.model';
+import User from './user.model';
 
 // TypeScript interface for Booking document
 export interface IBooking extends Document {
   eventId: Types.ObjectId;
-  email: string;
+  userId: Types.ObjectId; // link to user
   createdAt: Date;
   updatedAt: Date;
 }
+
 
 const BookingSchema = new Schema<IBooking>(
   {
@@ -16,19 +18,10 @@ const BookingSchema = new Schema<IBooking>(
       ref: 'Event',
       required: [true, 'Event ID is required'],
     },
-    email: {
-      type: String,
-      required: [true, 'Email is required'],
-      trim: true,
-      lowercase: true,
-      validate: {
-        validator: function (email: string) {
-          // RFC 5322 compliant email validation regex
-          const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-          return emailRegex.test(email);
-        },
-        message: 'Please provide a valid email address',
-      },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'User ID is required'],
     },
   },
   {
@@ -63,14 +56,15 @@ BookingSchema.pre('save', async function (next) {
 // Create index on eventId for faster queries
 BookingSchema.index({ eventId: 1 });
 
-// Create compound index for common queries (events bookings by date)
+// Create compound index for common queries (event bookings by date)
 BookingSchema.index({ eventId: 1, createdAt: -1 });
 
-// Create index on email for user booking lookups
-BookingSchema.index({ email: 1 });
+// Create index on userId for user booking lookups
+BookingSchema.index({ userId: 1 });
 
-// Enforce one booking per events per email
-BookingSchema.index({ eventId: 1, email: 1 }, { unique: true, name: 'uniq_event_email' });
+// Enforce one booking per event per user
+BookingSchema.index({ eventId: 1, userId: 1 }, { unique: true, name: 'uniq_event_user' });
+
 const Booking = models.Booking || model<IBooking>('Booking', BookingSchema);
 
 export default Booking;
