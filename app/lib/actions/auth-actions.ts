@@ -29,7 +29,8 @@ export const signUp = async (
   email: string,
   password: string,
   name: string,
-  image?: File
+  image?: File,
+  role: "user" | "admin" = "user"
 ) => {
   let imageUrl = "";
 
@@ -49,6 +50,7 @@ export const signUp = async (
       password,
       name,
       image: imageUrl,
+      role
     },
   });
 

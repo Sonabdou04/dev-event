@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { User, Settings, LogOut } from "lucide-react";
+import { User, Settings, LogOut, Lock } from "lucide-react";
 import { signOut } from "../app/lib/actions/auth-actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -109,8 +109,18 @@ export default function ProfileDropdown({ user }: { user: User }) {
                 <p className="text-xs text-light-200 truncate">{user.email}</p>
               )}
             </div>
+            {user.role === "admin" && <Link
+              href="/admin/dashboard"
+              className="block px-4 py-2 text-sm text-light-100 hover:bg-dark-200 transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              <span className="flex items-center gap-2">
+                <Lock className="h-4 w-4" />
+                <span>Admin</span>
+              </span>
+            </Link>}
             <Link
-              href="/profile"
+              href="/user/profile"
               className="block px-4 py-2 text-sm text-light-100 hover:bg-dark-200 transition-colors"
               onClick={() => setIsOpen(false)}
             >
@@ -120,7 +130,7 @@ export default function ProfileDropdown({ user }: { user: User }) {
               </span>
             </Link>
             <Link
-              href="/settings"
+              href="/user/settings"
               className="block px-4 py-2 text-sm text-light-100 hover:bg-dark-200 transition-colors"
               onClick={() => setIsOpen(false)}
             >
