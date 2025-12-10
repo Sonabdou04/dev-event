@@ -18,8 +18,7 @@ export default async function NavBar({ session }: { session: Session | null }) {
           <Link href="/events">Events</Link>
           {session && (
             <>
-              <Link href="/create-event">Create Event</Link>{" "}
-              <Link href={"/dashboard"}>Dashboard</Link>
+              {/* <Link href={"/dashboard"}>Dashboard</Link> */}
               <ProfileDropdown user={session.user} />
             </>
           )}
