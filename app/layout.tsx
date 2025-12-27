@@ -7,9 +7,10 @@ import { Suspense } from "react";
 import { auth } from "./lib/auth";
 import { headers } from "next/headers";
 import { Toaster } from "sonner";
+import Footer from "../components/Footer";
 
 async function NavBarWithSession() {
-  const session = (await auth.api.getSession({ headers: await headers() }));
+  const session = await auth.api.getSession({ headers: await headers() });
   console.log("Server session:", session); // Debug log
   return <NavBar session={session} />;
 }
@@ -35,7 +36,7 @@ export default async function RootLayout({ children }) {
       <body
         className={`${schibstedGrotesk?.variable} ${martianMono?.variable} min-h-screen antialiased`}
       >
-        <Toaster richColors position="bottom-right"/>
+        <Toaster richColors position="bottom-right" />
         <PosthogProvider>
           <Suspense fallback={<div>Loading...</div>}>
             <NavBarWithSession />
@@ -54,6 +55,7 @@ export default async function RootLayout({ children }) {
             />
           </div>
           <main>{children}</main>
+          <Footer />
         </PosthogProvider>
       </body>
     </html>
